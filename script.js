@@ -294,3 +294,81 @@ micButton.addEventListener("click", async () => {
       "Mikrofon izni verilmedi veya mikrofon açılamadı.";
   }
 });
+
+
+// HEDİYE VE KALP ANİMASYONLARI
+const giftArea = document.getElementById("giftArea");
+const giftButton = document.getElementById("giftButton");
+const giftMessage = document.getElementById("giftMessage");
+const replayButton = document.getElementById("replayButton");
+const floatingHearts = document.getElementById("floatingHearts");
+
+giftButton.addEventListener("click", () => {
+  giftMessage.hidden = !giftMessage.hidden;
+  giftButton.textContent = giftMessage.hidden
+    ? "♡ Sana küçük bir hediye"
+    : "♡ Hediyeni kapat";
+});
+
+function createHearts() {
+  for (let i = 0; i < 35; i++) {
+    const heart = document.createElement("span");
+    heart.className = "floating-heart";
+    heart.textContent = "♥";
+
+    heart.style.left = Math.random() * 100 + "%";
+    heart.style.fontSize = 12 + Math.random() * 18 + "px";
+    heart.style.animationDuration = 3 + Math.random() * 4 + "s";
+    heart.style.animationDelay = Math.random() * 2 + "s";
+
+    floatingHearts.appendChild(heart);
+    heart.addEventListener("animationend", () => heart.remove());
+  }
+}
+
+// Mum söndüğünde hediyeyi ve kalpleri göster
+const giftObserver = new MutationObserver(() => {
+  if (!finalMessage.hidden && candleOut) {
+    giftArea.hidden = false;
+    createHearts();
+    giftObserver.disconnect();
+  }
+});
+
+giftObserver.observe(finalMessage, {
+  attributes: true,
+  attributeFilter: ["hidden"]
+});
+
+// Baştan başlat
+replayButton.addEventListener("click", () => {
+  stopMicrophone();
+  window.location.reload();
+});
+
+
+/* SÜRPRİZ NOT AÇMA / KAPATMA */
+
+const secretButton = document.getElementById("secretButton");
+const secretNote = document.getElementById("secretNote");
+
+if (secretButton && secretNote) {
+  secretButton.addEventListener("click", () => {
+    const opening = secretNote.hidden;
+
+    secretNote.hidden = !opening;
+
+    secretButton.textContent = opening
+      ? "Notu kapat ♡"
+      : "Sıla, burada sana küçük bir not var ♡";
+
+    if (opening) {
+      requestAnimationFrame(() => {
+        secretNote.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      });
+    }
+  });
+}

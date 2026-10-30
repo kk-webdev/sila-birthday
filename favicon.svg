@@ -1,0 +1,13 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="17" fill="#3d241d"/>
+  <path d="M8 0 L18 0 L8 20 Z" fill="#9d6c4b"/>
+  <ellipse cx="49" cy="15" rx="9" ry="6"
+           fill="#a16d50" stroke="#1f120e" stroke-width="4"/>
+  <ellipse cx="15" cy="49" rx="8" ry="10"
+           fill="#a16d50" stroke="#1f120e" stroke-width="4"/>
+  <text x="32" y="46" font-size="43"
+        font-family="Georgia,serif"
+        font-style="italic"
+        text-anchor="middle" fill="#ffe1e9">S</text>
+</svg>
