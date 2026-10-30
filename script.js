@@ -262,10 +262,10 @@ micButton.addEventListener("click", async () => {
         : 0;
 
       // Hem güçlü hem de hava sesi içeren ses aranıyor.
-     const looksLikeBlow =
-  volume > 0.025 &&
-  highNoise > 20 &&
-  highNoise > lowNoise * 0.35;
+  const looksLikeBlow =
+  volume > 0.035 &&
+  highNoise > 18 &&
+  highNoise > lowNoise * 0.3;
 
       if (looksLikeBlow) {
         blowFrames++;
@@ -274,7 +274,7 @@ micButton.addEventListener("click", async () => {
       }
 
       // Yaklaşık yarım saniyelik üfleme
-      if (blowFrames >= 10) {
+      if (blowFrames >= 4) {
         blowOutCandle();
       }
     }
@@ -372,3 +372,56 @@ if (secretButton && secretNote) {
     }
   });
 }
+// HIZLI ÜFLEME VE TELEFONU SALLAYARAK MUM SÖNDÜRME
+
+// Telefon sallama algılama
+let lastShakeTime = 0;
+let lastShakeX = null;
+let lastShakeY = null;
+let lastShakeZ = null;
+
+function handleShake(event) {
+  if (candleOut || !birthdayScreen.classList.contains("active")) return;
+
+  const acceleration = event.accelerationIncludingGravity;
+  if (!acceleration || acceleration.x === null) return;
+
+  const { x, y, z } = acceleration;
+
+  if (lastShakeX !== null) {
+    const movement =
+      Math.abs(x - lastShakeX) +
+      Math.abs(y - lastShakeY) +
+      Math.abs(z - lastShakeZ);
+
+    if (movement > 18 && Date.now() - lastShakeTime > 800) {
+      lastShakeTime = Date.now();
+      blowOutCandle();
+    }
+  }
+
+  lastShakeX = x;
+  lastShakeY = y;
+  lastShakeZ = z;
+}
+
+window.addEventListener("devicemotion", handleShake);
+
+// iPhone hareket sensörü izni
+async function enableShakePermission() {
+  if (
+    typeof DeviceMotionEvent !== "undefined" &&
+    typeof DeviceMotionEvent.requestPermission === "function"
+  ) {
+    try {
+      await DeviceMotionEvent.requestPermission();
+    } catch (error) {
+      console.log("Hareket sensörü izni alınamadı:", error);
+    }
+  }
+}
+
+// İlk kullanıcı dokunuşunda izin iste
+birthdayScreen.addEventListener("click", enableShakePermission, {
+  once: true
+});
